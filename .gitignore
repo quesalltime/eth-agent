@@ -1,0 +1,7 @@
+# Ignore
+vendor/*
+sysconfig.yaml
+docker/.env
+
+# Allow
+!vendor/vendor.json

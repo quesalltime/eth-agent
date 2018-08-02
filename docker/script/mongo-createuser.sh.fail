@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo "Creating mongo users... $MONGO_BART_DB $MONGO_BART_USERNAME $MONGO_BART_PASSWORD"
+
+mongo --eval "db.createUser({user: '$MONGO_BART_USERNAME', pwd: '$MONGO_BART_PASSWORD', roles:[{role:'dbOwner', db: '$MONGO_BART_DB'}]});"

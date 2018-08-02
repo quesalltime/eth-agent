@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+echo 'Creating application user and db'
+
+mongo $MONGO_BART_DB \
+--host localhost \
+--port 27017 \
+-u $MONGO_INITDB_ROOT_USERNAME \
+-p $MONGO_INITDB_ROOT_PASSWORD \
+--authenticationDatabase admin \
+--eval "db.createUser({user: '$MONGO_BART_USERNAME', pwd: '$MONGO_BART_PASSWORD', roles:[{role:'dbOwner', db: '$MONGO_BART_DB'}]});"
+
+# ref:
+# https://hub.docker.com/_/mongo/
+# https://medium.com/@MaxouMask/secured-mongodb-container-6b602ef67885
+# https://lakshminp.com/docker-mongodb
+# https://blog.csdn.net/zone_/article/details/78861549
+# https://eric0806.blogspot.com/2017/02/mongodb.html
+# https://blog.csdn.net/u014044812/article/details/78666297
