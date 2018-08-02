@@ -23,7 +23,7 @@ func requestDB(data rqst.Payload) interface{} {
 	case "eth_getTransactionReceipt":
 		response = historyUtils.GetTransactionReceipt(data)
 	case "eth_getCode":
-		response = notImplemented()
+		response = historyUtils.GetCode(data)
 	case "eth_getBlockByHash":
 		response = notImplemented()
 	case "eth_getBlockByNumber":

@@ -24,3 +24,10 @@ type ReceiptReponse struct {
 	ID      int             `json:"id"`
 	Result  receipt.Receipt `json:"result`
 }
+
+// GetCode response format
+type GetCodeResponse struct {
+	Jsonrpc string `json:"jsonrpc"`
+	ID      int    `json:"id"`
+	Result  string `json:"result"`
+}
