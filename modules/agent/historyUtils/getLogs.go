@@ -384,7 +384,7 @@ func RetrieveCurrentBlockNumber() (int64, error) {
 	}
 
 	for _, data := range receipt {
-		blockNumber = data.BlockNumber
+		blockNumber = data.BlockNumber.(int64)
 	}
 
 	return blockNumber, err

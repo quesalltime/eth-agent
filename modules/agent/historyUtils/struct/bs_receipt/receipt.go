@@ -2,11 +2,11 @@ package receipt
 
 // Receipt define the struct for transaction receipt in blocks.
 type Receipt struct {
-	BlockHash         string `bson:"blockHash"`
-	BlockNumber       int64  `bson:"blockNumber"`
-	ContractAddress   string `bson:"contractAddress"`
-	CumulativeGasUsed string `bson:"cumulativeGasUsed"`
-	GasUsed           string `bson:"gasUsed"`
+	BlockHash         string      `bson:"blockHash"`
+	BlockNumber       interface{} `bson:"blockNumber"`
+	ContractAddress   string      `bson:"contractAddress"`
+	CumulativeGasUsed string      `bson:"cumulativeGasUsed"`
+	GasUsed           string      `bson:"gasUsed"`
 	Logs              []Log
 	LogsBloom         string `bson:"logsBloom"`
 	Root              string `bson:"root"`

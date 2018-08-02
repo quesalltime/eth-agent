@@ -17,3 +17,10 @@ type GBTCResponse struct {
 	ID      int    `json:"id"`
 	Result  string `json:"result"`
 }
+
+// Transaction(tx) response format
+type ReceiptReponse struct {
+	Jsonrpc string          `json:"jsonrpc"`
+	ID      int             `json:"id"`
+	Result  receipt.Receipt `json:"result`
+}
