@@ -34,9 +34,9 @@ type GetCodeResponse struct {
 }
 
 type GetBlockResponse struct {
-	Jsonrpc string      `json:"jsonrpc"`
-	ID      int         `json:"id"`
-	Result  block.Block `json:"result"`
+	Jsonrpc string                 `json:"jsonrpc"`
+	ID      int                    `json:"id"`
+	Result  block.BlockForResponse `json:"result"`
 }
 
 type GetBlockOnlyTxHashResponse struct {

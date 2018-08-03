@@ -17,11 +17,11 @@ var (
 // BS_Blocks = "BS_Blockss"
 )
 
-func GetBlockByHash(data rqst.Payload) interface{} {
+func GetBlockByNumber(data rqst.Payload) interface{} {
 	var err error
 	var message string
 
-	var blockHash string
+	var blockNumberHex string
 	var isNeedAllTx bool
 
 	params := data.Params
@@ -50,8 +50,8 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 		logger.Console().Panic(errors)
 	}
 
-	blockHash = param1.(string)
-	blockHash, err = historyUtilsCommon.Check64HeximalFormat(blockHash)
+	blockNumberHex = param1.(string)
+	err = historyUtilsCommon.CheckBlockNumberFormat(blockNumberHex)
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        0,
@@ -60,10 +60,12 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 		logger.Console().Panic(errors)
 	}
 
-	fmt.Println("================getBlockByHash initial parameter================")
-	fmt.Printf("blockHash:%s, isNeedAllTx: %t", blockHash, isNeedAllTx)
+	blockNumber, err := historyUtilsCommon.ParseHexToInt64(blockNumberHex)
 
-	response := GetBlockByHashIndexer(blockHash, isNeedAllTx)
+	fmt.Println("================getBlockByNumber initial parameter================")
+	fmt.Printf("blockNumber:%s, isNeedAllTx: %t", blockNumber, isNeedAllTx)
+
+	response := GetBlockByNumberIndexer(blockNumber, isNeedAllTx)
 	var responseBlockType rsps.GetBlockResponse
 	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
 	var responseEmpty rsps.EmptyResponse
@@ -85,13 +87,13 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 	return 0
 }
 
-func GetBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
+func GetBlockByNumberIndexer(blockNumber int64, isNeedAllTx bool) interface{} {
 	var response rsps.EmptyResponse
 	var responseBlockType rsps.GetBlockResponse
 	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
 
 	condition := bson.M{
-		"hash": blockHash,
+		"number": blockNumber,
 	}
 
 	result, err := RetrieveBlock(condition)
@@ -112,6 +114,8 @@ func GetBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 	}
 
 	if isNeedAllTx {
+		responseBlockType.Jsonrpc = "2.0"
+		responseBlockType.ID = 73
 		responseBlockType.Jsonrpc = "2.0"
 		responseBlockType.ID = 73
 		responseBlockType.Result.Author = result[0].Author
@@ -137,9 +141,9 @@ func GetBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 		responseBlockType.Result.Transactions = result[0].Transactions
 
 		responseBlockType.Result.Number = historyUtilsCommon.ParseInt64ToHex(result[0].Number)
-
 		return responseBlockType
 	}
+
 	responseBlockTxHashOnlyType.Jsonrpc = "2.0"
 	responseBlockTxHashOnlyType.ID = 73
 	responseBlockTxHashOnlyType.Result.Author = result[0].Author
@@ -162,10 +166,10 @@ func GetBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 	responseBlockTxHashOnlyType.Result.Hash = result[0].Hash
 	responseBlockTxHashOnlyType.Result.TransactionsRoot = result[0].TransactionsRoot
 	responseBlockTxHashOnlyType.Result.Uncles = result[0].Uncles
+
 	// block number
 	blockNumberHex := historyUtilsCommon.ParseInt64ToHex(result[0].Number)
 	responseBlockTxHashOnlyType.Result.Number = blockNumberHex
-
 	// tx hashes
 	txs := result[0].Transactions
 	txsHash := make([]string, len(txs))
@@ -174,6 +178,7 @@ func GetBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 	}
 	responseBlockTxHashOnlyType.Result.Transactions = txsHash
 	return responseBlockTxHashOnlyType
+
 }
 
 // redeclare in getBlockTransactionCountByNumber

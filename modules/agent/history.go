@@ -27,7 +27,7 @@ func requestDB(data rqst.Payload) interface{} {
 	case "eth_getBlockByHash":
 		response = historyUtils.GetBlockByHash(data)
 	case "eth_getBlockByNumber":
-		response = notImplemented()
+		response = historyUtils.GetBlockByNumber(data)
 	default:
 		response = "no corresponding method"
 		logger.Console().Debug(fmt.Sprintf("%s", response))
