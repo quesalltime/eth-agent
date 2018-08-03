@@ -25,7 +25,7 @@ func requestDB(data rqst.Payload) interface{} {
 	case "eth_getCode":
 		response = historyUtils.GetCode(data)
 	case "eth_getBlockByHash":
-		response = notImplemented()
+		response = historyUtils.GetBlockByHash(data)
 	case "eth_getBlockByNumber":
 		response = notImplemented()
 	default:

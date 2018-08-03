@@ -1,6 +1,7 @@
 package rsps
 
 import (
+	block "eth-agent/modules/agent/historyUtils/struct/bs_block"
 	receipt "eth-agent/modules/agent/historyUtils/struct/bs_receipt"
 )
 
@@ -27,6 +28,24 @@ type ReceiptReponse struct {
 
 // GetCode response format
 type GetCodeResponse struct {
+	Jsonrpc string `json:"jsonrpc"`
+	ID      int    `json:"id"`
+	Result  string `json:"result"`
+}
+
+type GetBlockResponse struct {
+	Jsonrpc string      `json:"jsonrpc"`
+	ID      int         `json:"id"`
+	Result  block.Block `json:"result"`
+}
+
+type GetBlockOnlyTxHashResponse struct {
+	Jsonrpc string                    `json:"jsonrpc"`
+	ID      int                       `json:"id"`
+	Result  block.BlockWithOnlyTxHash `json:"result"`
+}
+
+type EmptyResponse struct {
 	Jsonrpc string `json:"jsonrpc"`
 	ID      int    `json:"id"`
 	Result  string `json:"result"`
