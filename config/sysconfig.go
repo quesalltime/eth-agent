@@ -71,9 +71,11 @@ type RedisConf struct {
 
 // MongoConf - config of MongoDB service
 type MongoConf struct {
-	Domain string `yaml:"domain"`
-	Port   string `yaml:"port"`
-	DBName string `yaml:"agent_db"`
+	Domain   string `yaml:"domain"`
+	Port     string `yaml:"port"`
+	DBName   string `yaml:"agent_db"`
+	Username string `yaml:"agent_user"`
+	Password string `yaml:"agent_pwd"`
 }
 
 // Parse content in sysConfigPath
