@@ -96,6 +96,7 @@ func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, erro
 	var err error
 
 	mongo, err := historyUtilsMongo.GetMongoSession()
+
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -112,7 +113,7 @@ func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, erro
 	err = collection.Find(conditions).All(&result)
 
 	if err != nil {
-		message := fmt.Sprintf("Retrive block failded")
+		message := fmt.Sprintf("Retrive blocks failded, Because: %s", err)
 		err = errors.New(message)
 	}
 
