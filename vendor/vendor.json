@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "iZRJ7l3vbg1KTE7tQvPZrGigEMQ=",
+			"path": "github.com/DeanThompson/ginpprof",
+			"revision": "8c0e31bfeaa87bd40412ee8a8ba383f5f700ff72",
+			"revisionTime": "2017-02-18T16:25:46Z"
+		},
+		{
 			"checksumSHA1": "3wRegCkENozpluaFqP2oPpdfFiQ=",
 			"path": "github.com/ekyoung/gin-nice-recovery",
 			"revision": "1654dca486db940bf0c76b0562328f40a898504e",
@@ -183,5 +189,5 @@
 			"revisionTime": "2018-03-28T19:50:20Z"
 		}
 	],
-	"rootPath": "open-source/eth-agent"
+	"rootPath": "eth-agent"
 }

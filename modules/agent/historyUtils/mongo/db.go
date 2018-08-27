@@ -20,9 +20,12 @@ func GetMongoSession() (*mgo.Session, error) {
 
 	if mgoSession == nil {
 		mgoSession, err = mgo.Dial(mongoURL)
+
 		if err != nil {
 			message := fmt.Sprintf("Failed to start the Mongo session")
 			err = errors.New(message)
+
+			return nil, err
 		}
 	}
 	return mgoSession.Clone(), err
