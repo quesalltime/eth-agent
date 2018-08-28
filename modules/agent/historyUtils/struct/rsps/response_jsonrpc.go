@@ -20,7 +20,7 @@ type GBTCResponse struct {
 }
 
 // Transaction(tx) response format
-type ReceiptReponse struct {
+type ReceiptResponse struct {
 	Jsonrpc string          `json:"jsonrpc"`
 	ID      int             `json:"id"`
 	Result  receipt.Receipt `json:"result`

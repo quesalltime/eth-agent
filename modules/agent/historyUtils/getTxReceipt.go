@@ -48,7 +48,7 @@ func GetTxReceipt(data rqst.Payload) interface{} {
 	return response
 }
 
-func getTxReceiptIndexer(transactionAddress string) rsps.ReceiptReponse {
+func getTxReceiptIndexer(transactionAddress string) rsps.ReceiptResponse {
 	var response rsps.ReceiptReponse
 	response.Jsonrpc = "2.0"
 	response.ID = 73
