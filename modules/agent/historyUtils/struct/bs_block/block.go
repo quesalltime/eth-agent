@@ -20,12 +20,12 @@ type Block struct {
 	StateRoot        string `bson:"stateRoot"`
 	Timestamp        int    `bson:"timestamp"`
 	TotalDifficulty  string `bson:"totalDifficulty"`
-	Transactions     []Transaction
+	Transactions     []string
 	TransactionsRoot string `bson:"transactionsRoot"`
 	Uncles           string `bson:"uncles"`
 }
 
-type BlockForResponse struct {
+type BlockForOnlyTxHashes struct {
 	Author           string `bson:"author"`
 	Difficulty       string `bson:"difficulty"`
 	ExtraData        string `bson:"extraData"`
@@ -45,7 +45,7 @@ type BlockForResponse struct {
 	StateRoot        string `bson:"stateRoot"`
 	Timestamp        int    `bson:"timestamp"`
 	TotalDifficulty  string `bson:"totalDifficulty"`
-	Transactions     []Transaction
+	Transactions     []string
 	TransactionsRoot string `bson:"transactionsRoot"`
 	Uncles           string `bson:"uncles"`
 }

@@ -63,7 +63,7 @@ func GetBlockByNumber(data rqst.Payload) interface{} {
 	fmt.Printf("blockNumber:%s, isNeedAllTx: %t", blockNumber, isNeedAllTx)
 
 	response := getBlockByNumberIndexer(blockNumber, isNeedAllTx)
-	var responseBlockType rsps.GetBlockResponse
+	var responseBlockType rsps.GetBlockWithOnlyTxHashesResponse
 	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
 	var responseEmpty rsps.EmptyResponse
 
@@ -71,8 +71,8 @@ func GetBlockByNumber(data rqst.Payload) interface{} {
 	case rsps.GetBlockOnlyTxHashResponse:
 		responseBlockTxHashOnlyType = response.(rsps.GetBlockOnlyTxHashResponse)
 		return responseBlockTxHashOnlyType
-	case rsps.GetBlockResponse:
-		responseBlockType = response.(rsps.GetBlockResponse)
+	case rsps.GetBlockWithOnlyTxHashesResponse:
+		responseBlockType = response.(rsps.GetBlockWithOnlyTxHashesResponse)
 		return responseBlockType
 	case rsps.EmptyResponse:
 		responseEmpty = response.(rsps.EmptyResponse)
@@ -86,7 +86,7 @@ func GetBlockByNumber(data rqst.Payload) interface{} {
 
 func getBlockByNumberIndexer(blockNumber int64, isNeedAllTx bool) interface{} {
 	var response rsps.EmptyResponse
-	var responseBlockType rsps.GetBlockResponse
+	var responseBlockType rsps.GetBlockWithOnlyTxHashesResponse
 	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
 
 	condition := bson.M{
@@ -167,13 +167,17 @@ func getBlockByNumberIndexer(blockNumber int64, isNeedAllTx bool) interface{} {
 	// block number
 	blockNumberHex := historyUtilsCommon.ParseInt64ToHex(result[0].Number)
 	responseBlockTxHashOnlyType.Result.Number = blockNumberHex
-	// tx hashes
-	txs := result[0].Transactions
-	txsHash := make([]string, len(txs))
-	for i, tx := range txs {
-		txsHash[i] = tx.Hash
-	}
-	responseBlockTxHashOnlyType.Result.Transactions = txsHash
+
+	/*
+		// tx hashes
+		txs := result[0].Transactions
+		txsHash := make([]string, len(txs))
+		for i, tx := range txs {
+			txsHash[i] = tx.Hash
+		}
+		responseBlockTxHashOnlyType.Result.Transactions = txsHash
+	*/
+	responseBlockTxHashOnlyType.Result.Transactions = result[0].Transactions
 	return responseBlockTxHashOnlyType
 
 }

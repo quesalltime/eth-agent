@@ -61,7 +61,7 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 	fmt.Printf("blockHash:%s, isNeedAllTx: %t\n", blockHash, isNeedAllTx)
 
 	response := getBlockByHashIndexer(blockHash, isNeedAllTx)
-	var responseBlockType rsps.GetBlockResponse
+	var responseBlockType rsps.GetBlockWithOnlyTxHashesResponse
 	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
 	var responseEmpty rsps.EmptyResponse
 
@@ -69,8 +69,8 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 	case rsps.GetBlockOnlyTxHashResponse:
 		responseBlockTxHashOnlyType = response.(rsps.GetBlockOnlyTxHashResponse)
 		return responseBlockTxHashOnlyType
-	case rsps.GetBlockResponse:
-		responseBlockType = response.(rsps.GetBlockResponse)
+	case rsps.GetBlockWithOnlyTxHashesResponse:
+		responseBlockType = response.(rsps.GetBlockWithOnlyTxHashesResponse)
 		return responseBlockType
 	case rsps.EmptyResponse:
 		responseEmpty = response.(rsps.EmptyResponse)
@@ -84,7 +84,7 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 
 func getBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 	var response rsps.EmptyResponse
-	var responseBlockType rsps.GetBlockResponse
+	var responseBlockType rsps.GetBlockWithOnlyTxHashesResponse
 	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
 
 	condition := bson.M{
@@ -132,7 +132,6 @@ func getBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 		responseBlockType.Result.TransactionsRoot = result[0].TransactionsRoot
 		responseBlockType.Result.Uncles = result[0].Uncles
 		responseBlockType.Result.Transactions = result[0].Transactions
-
 		responseBlockType.Result.Number = historyUtilsCommon.ParseInt64ToHex(result[0].Number)
 
 		return responseBlockType
@@ -164,12 +163,14 @@ func getBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 	blockNumberHex := historyUtilsCommon.ParseInt64ToHex(result[0].Number)
 	responseBlockTxHashOnlyType.Result.Number = blockNumberHex
 
-	// tx hashes
-	txs := result[0].Transactions
-	txsHash := make([]string, len(txs))
-	for i, tx := range txs {
-		txsHash[i] = tx.Hash
-	}
-	responseBlockTxHashOnlyType.Result.Transactions = txsHash
+	/*
+		// tx hashes
+		txs := result[0].Transactions
+		txsHash := make([]string, len(txs))
+		for i, tx := range txs {
+			txsHash[i] = tx.Hash
+		}
+	*/
+	responseBlockTxHashOnlyType.Result.Transactions = result[0].Transactions
 	return responseBlockTxHashOnlyType
 }
