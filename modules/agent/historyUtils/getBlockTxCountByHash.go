@@ -3,10 +3,9 @@ package historyUtils
 import (
 	"errors"
 	"eth-agent/common"
-	collectionName "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
-	historyUtilsMongo "eth-agent/modules/agent/historyUtils/mongo"
-	blockStrcut "eth-agent/modules/agent/historyUtils/struct/bs_block"
+	model "eth-agent/modules/agent/historyUtils/model"
+
 	"eth-agent/modules/agent/historyUtils/struct/rsps"
 	"fmt"
 
@@ -60,7 +59,7 @@ func getBlockTxCountByHashIndexer(blockHash string) rsps.GBTCResponse {
 		"hash": blockHash,
 	}
 
-	result, err := retrieveBlock(condition)
+	result, err := model.RetrieveBlock(condition)
 
 	if err != nil {
 		errors := common.Error{
@@ -79,31 +78,4 @@ func getBlockTxCountByHashIndexer(blockHash string) rsps.GBTCResponse {
 		response.Result = historyUtilsCommon.ParseInt64ToHex(lengthOfTx)
 	}
 	return response
-}
-
-// retrieveBlock retrieve specific block data from mongo
-func retrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, error) {
-	var err error
-
-	mongo, err := historyUtilsMongo.GetMongoSession()
-	if err != nil {
-		errors := common.Error{
-			ErrorType:        1,
-			ErrorDescription: err.Error(),
-		}
-		logger.Console().Panic(errors)
-		logger.File().Error(err)
-	}
-
-	defer mongo.Close()
-
-	collection := mongo.DB(dbName).C(collectionName.BsBlocks)
-
-	result := []blockStrcut.Block{}
-	err = collection.Find(conditions).All(&result)
-	if err != nil {
-		message := fmt.Sprintf("Retrive block failded")
-		err = errors.New(message)
-	}
-	return result, err
 }

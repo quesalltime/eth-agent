@@ -4,6 +4,7 @@ import (
 	"errors"
 	"eth-agent/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
+	model "eth-agent/modules/agent/historyUtils/model"
 	"eth-agent/modules/agent/historyUtils/struct/rsps"
 	"fmt"
 
@@ -92,7 +93,7 @@ func GetBlockByNumberIndexer(blockNumber int64, isNeedAllTx bool) interface{} {
 		"number": blockNumber,
 	}
 
-	result, err := RetrieveBlock(condition)
+	result, err := model.RetrieveBlock(condition)
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -176,33 +177,3 @@ func GetBlockByNumberIndexer(blockNumber int64, isNeedAllTx bool) interface{} {
 	return responseBlockTxHashOnlyType
 
 }
-
-// redeclare in getBlockTransactionCountByNumber
-
-// RetrieveBlock retrieve specific block data from mongo
-// func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, error) {
-// 	var err error
-
-// 	mongo, err := historyUtilsMongo.GetMongoSession()
-// 	if err != nil {
-// 		errors := common.Error{
-// 			ErrorType:        1,
-// 			ErrorDescription: err.Error(),
-// 		}
-// 		logger.Console().Panic(errors)
-// 		logger.File().Error(err)
-// 	}
-
-// 	defer mongo.Close()
-
-// 	collection := mongo.DB(dbName).C(BS_Blocks)
-// 	result := []blockStrcut.Block{}
-// 	err = collection.Find(conditions).All(&result)
-
-// 	if err != nil {
-// 		message := fmt.Sprintf("Retrive Block failded")
-// 		err = errors.New(message)
-// 	}
-
-// 	return result, err
-// }

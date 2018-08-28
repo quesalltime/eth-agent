@@ -3,10 +3,8 @@ package historyUtils
 import (
 	"errors"
 	"eth-agent/common"
-	collectionName "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
-	historyUtilsMongo "eth-agent/modules/agent/historyUtils/mongo"
-	contractStruct "eth-agent/modules/agent/historyUtils/struct/bs_contract"
+	model "eth-agent/modules/agent/historyUtils/model"
 	"eth-agent/modules/agent/historyUtils/struct/rsps"
 	"fmt"
 
@@ -59,7 +57,7 @@ func GetCodeIndexer(contractAddress string) rsps.GetCodeResponse {
 		"contractAddress": contractAddress,
 	}
 
-	result, err := RetrieveContract(condition)
+	result, err := model.RetrieveContracts(condition)
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -71,31 +69,4 @@ func GetCodeIndexer(contractAddress string) rsps.GetCodeResponse {
 
 	response.Result = result[0].Code
 	return response
-}
-
-func RetrieveContract(conditions map[string]interface{}) ([]contractStruct.Contract, error) {
-	var err error
-
-	mongo, err := historyUtilsMongo.GetMongoSession()
-	if err != nil {
-		errors := common.Error{
-			ErrorType:        1,
-			ErrorDescription: err.Error(),
-		}
-		logger.Console().Panic(errors)
-		logger.File().Error(err)
-	}
-
-	defer mongo.Close()
-
-	collection := mongo.DB(dbName).C(collectionName.BsContracts)
-	result := []contractStruct.Contract{}
-	err = collection.Find(conditions).All(&result)
-
-	if err != nil {
-		message := fmt.Sprintf("Retrive Receipt of Transaction failded")
-		err = errors.New(message)
-	}
-
-	return result, err
 }
