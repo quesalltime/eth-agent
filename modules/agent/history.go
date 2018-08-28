@@ -17,11 +17,11 @@ func requestDB(data rqst.Payload) interface{} {
 	case "eth_getLogs":
 		response = historyUtils.GetLogs(data)
 	case "eth_getBlockTransactionCountByNumber":
-		response = historyUtils.GetBlockTransactionCountByNumber(data)
+		response = historyUtils.GetBlockTxCountByNumber(data)
 	case "eth_getBlockTransactionCountByHash":
-		response = historyUtils.GetBlockTransactionCountByHash(data)
+		response = historyUtils.GetBlockTxCountByHash(data)
 	case "eth_getTransactionReceipt":
-		response = historyUtils.GetTransactionReceipt(data)
+		response = historyUtils.GetTxReceipt(data)
 	case "eth_getCode":
 		response = historyUtils.GetCode(data)
 	case "eth_getBlockByHash":

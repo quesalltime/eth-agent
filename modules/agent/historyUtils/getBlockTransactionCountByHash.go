@@ -16,7 +16,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func GetBlockTransactionCountByHash(data rqst.Payload) interface{} {
+func GetBlockTxCountByHash(data rqst.Payload) interface{} {
 	var err error
 	var message string
 
@@ -47,11 +47,11 @@ func GetBlockTransactionCountByHash(data rqst.Payload) interface{} {
 
 	var response rsps.GBTCResponse
 
-	response = getBlockTransactionCountByHashIndexer(blockHash)
+	response = getBlockTxCountByHashIndexer(blockHash)
 	return response
 }
 
-func getBlockTransactionCountByHashIndexer(blockHash string) rsps.GBTCResponse {
+func getBlockTxCountByHashIndexer(blockHash string) rsps.GBTCResponse {
 	var response rsps.GBTCResponse
 	response.Jsonrpc = "2.0"
 	response.ID = 73

@@ -73,7 +73,6 @@ func GetCodeIndexer(contractAddress string) rsps.GetCodeResponse {
 	return response
 }
 
-// RetrieveBlock retrieve specific block data from mongo
 func RetrieveContract(conditions map[string]interface{}) ([]contractStruct.Contract, error) {
 	var err error
 

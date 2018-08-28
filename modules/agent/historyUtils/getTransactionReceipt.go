@@ -16,7 +16,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func GetTransactionReceipt(data rqst.Payload) interface{} {
+func GetTxReceipt(data rqst.Payload) interface{} {
 	var err error
 	var message string
 
@@ -46,11 +46,11 @@ func GetTransactionReceipt(data rqst.Payload) interface{} {
 
 	var response rsps.ReceiptReponse
 
-	response = GetTransactionReceiptIndexer(transactionAddress)
+	response = GetTxReceiptIndexer(transactionAddress)
 	return response
 }
 
-func GetTransactionReceiptIndexer(transactionAddress string) rsps.ReceiptReponse {
+func GetTxReceiptIndexer(transactionAddress string) rsps.ReceiptReponse {
 	var response rsps.ReceiptReponse
 	response.Jsonrpc = "2.0"
 	response.ID = 73
