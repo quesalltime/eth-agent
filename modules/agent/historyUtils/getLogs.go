@@ -272,6 +272,7 @@ func getLogsIndexer(fromBlock string, toBlock string, address string, topics []i
 	var result []receiptStrcut.Receipt
 
 	result, err = model.RetrieveReceipts(conditions)
+
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,

@@ -58,6 +58,7 @@ func getTxReceiptIndexer(transactionAddress string) rsps.ReceiptResponse {
 	}
 
 	result, err := model.RetrieveReceipts(condition)
+
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -68,8 +69,8 @@ func getTxReceiptIndexer(transactionAddress string) rsps.ReceiptResponse {
 	}
 
 	// Convert the blockNumber from decimal to hex...
-
-	result[0].BlockNumber = historyUtilsCommon.ParseInt64ToHex(result[0].BlockNumber.(int))
+	// The blockNumber in BS_Receipt is heximal format (string)
+	// result[0].BlockNumber = historyUtilsCommon.ParseInt64ToHex(result[0].BlockNumber.(int))
 
 	response.Result = result[0]
 	return response
