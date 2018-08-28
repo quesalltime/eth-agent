@@ -3,6 +3,7 @@ package historyUtils
 import (
 	"errors"
 	"eth-agent/common"
+	collectionName "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsMongo "eth-agent/modules/agent/historyUtils/mongo"
 	blockStrcut "eth-agent/modules/agent/historyUtils/struct/bs_block"
@@ -13,10 +14,6 @@ import (
 	"eth-agent/modules/logger"
 
 	"gopkg.in/mgo.v2/bson"
-)
-
-var (
-// BS_Blocks = "BS_Blocks"
 )
 
 func GetBlockTransactionCountByHash(data rqst.Payload) interface{} {
@@ -100,7 +97,7 @@ func retrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, erro
 
 	defer mongo.Close()
 
-	collection := mongo.DB(dbName).C("BS_Blocks")
+	collection := mongo.DB(dbName).C(collectionName.BsBlocks)
 
 	result := []blockStrcut.Block{}
 	err = collection.Find(conditions).All(&result)

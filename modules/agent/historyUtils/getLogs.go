@@ -4,6 +4,7 @@ import (
 	"errors"
 	"eth-agent/common"
 	"eth-agent/config"
+	collectionName "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsMongo "eth-agent/modules/agent/historyUtils/mongo"
 	receiptStrcut "eth-agent/modules/agent/historyUtils/struct/bs_receipt"
@@ -19,7 +20,6 @@ var (
 	dbName = config.SysConf.Mongo.DBName
 	// limit the number of the logs user can request.
 	numberOfLimitation = (float64)(1000)
-	BS_Receipts        = "BS_Receipts"
 )
 
 // GetLogs will check every parameters first.
@@ -339,7 +339,7 @@ func RetrieveAllReceipt(conditions map[string]interface{}) ([]receiptStrcut.Rece
 
 	defer mongo.Close()
 
-	collection := mongo.DB(dbName).C(BS_Receipts)
+	collection := mongo.DB(dbName).C(collectionName.BsReceipts)
 	result := []receiptStrcut.Receipt{}
 	err = collection.Find(conditions).All(&result)
 
@@ -368,7 +368,7 @@ func RetrieveCurrentBlockNumber() (int64, error) {
 
 	defer mongo.Close()
 
-	collection := mongo.DB(dbName).C(BS_Receipts)
+	collection := mongo.DB(dbName).C(collectionName.BsReceipts)
 	var receipt []receiptStrcut.Receipt
 	var maxBlockNumber = "-blockNumber"
 

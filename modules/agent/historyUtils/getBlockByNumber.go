@@ -13,10 +13,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var (
-// BS_Blocks = "BS_Blockss"
-)
-
 func GetBlockByNumber(data rqst.Payload) interface{} {
 	var err error
 	var message string

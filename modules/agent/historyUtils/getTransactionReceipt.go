@@ -3,6 +3,7 @@ package historyUtils
 import (
 	"errors"
 	"eth-agent/common"
+	collectionName "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsMongo "eth-agent/modules/agent/historyUtils/mongo"
 	receiptStruct "eth-agent/modules/agent/historyUtils/struct/bs_receipt"
@@ -13,10 +14,6 @@ import (
 	"eth-agent/modules/logger"
 
 	"gopkg.in/mgo.v2/bson"
-)
-
-var (
-// BS_Receipts        = "BS_Receipts"
 )
 
 func GetTransactionReceipt(data rqst.Payload) interface{} {
@@ -96,7 +93,7 @@ func RetrieveReceipt(conditions map[string]interface{}) ([]receiptStruct.Receipt
 
 	defer mongo.Close()
 
-	collection := mongo.DB(dbName).C(BS_Receipts)
+	collection := mongo.DB(dbName).C(collectionName.BsReceipts)
 	result := []receiptStruct.Receipt{}
 	err = collection.Find(conditions).All(&result)
 

@@ -3,6 +3,7 @@ package historyUtils
 import (
 	"errors"
 	"eth-agent/common"
+	collectionName "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
 	historyUtilsMongo "eth-agent/modules/agent/historyUtils/mongo"
 	contractStruct "eth-agent/modules/agent/historyUtils/struct/bs_contract"
@@ -13,10 +14,6 @@ import (
 	"eth-agent/modules/logger"
 
 	"gopkg.in/mgo.v2/bson"
-)
-
-var (
-	BS_Contracts = "BS_Contracts"
 )
 
 func GetCode(data rqst.Payload) interface{} {
@@ -92,7 +89,7 @@ func RetrieveContract(conditions map[string]interface{}) ([]contractStruct.Contr
 
 	defer mongo.Close()
 
-	collection := mongo.DB(dbName).C(BS_Contracts)
+	collection := mongo.DB(dbName).C(collectionName.BsContracts)
 	result := []contractStruct.Contract{}
 	err = collection.Find(conditions).All(&result)
 
