@@ -8,6 +8,7 @@ import (
 	blockStrcut "eth-agent/modules/agent/historyUtils/struct/bs_block"
 	"eth-agent/modules/agent/historyUtils/struct/rsps"
 	"fmt"
+	"time"
 
 	"eth-agent/modules/agent/struct/rqst"
 	"eth-agent/modules/logger"
@@ -96,6 +97,8 @@ func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, erro
 	var err error
 
 	mongo, err := historyUtilsMongo.GetMongoSession()
+	mongo.SetSocketTimeout(1 * time.Hour)
+	//session.SetSocketTimeout(1 * time.Hour)
 
 	if err != nil {
 		errors := common.Error{

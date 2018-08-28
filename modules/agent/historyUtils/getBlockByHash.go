@@ -61,7 +61,7 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 	}
 
 	fmt.Println("================getBlockByHash initial parameter================")
-	fmt.Printf("blockHash:%s, isNeedAllTx: %t", blockHash, isNeedAllTx)
+	fmt.Printf("blockHash:%s, isNeedAllTx: %t\n", blockHash, isNeedAllTx)
 
 	response := GetBlockByHashIndexer(blockHash, isNeedAllTx)
 	var responseBlockType rsps.GetBlockResponse
@@ -140,6 +140,7 @@ func GetBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 
 		return responseBlockType
 	}
+
 	responseBlockTxHashOnlyType.Jsonrpc = "2.0"
 	responseBlockTxHashOnlyType.ID = 73
 	responseBlockTxHashOnlyType.Result.Author = result[0].Author
