@@ -42,14 +42,14 @@ func GetTxReceipt(data rqst.Payload) interface{} {
 	fmt.Println("================getTransactionReceipt initial parameter================")
 	fmt.Printf("transactionReceipt:%s\n", transactionAddress)
 
-	var response rsps.ReceiptReponse
+	var response rsps.ReceiptResponse
 
 	response = getTxReceiptIndexer(transactionAddress)
 	return response
 }
 
 func getTxReceiptIndexer(transactionAddress string) rsps.ReceiptResponse {
-	var response rsps.ReceiptReponse
+	var response rsps.ReceiptResponse
 	response.Jsonrpc = "2.0"
 	response.ID = 73
 
