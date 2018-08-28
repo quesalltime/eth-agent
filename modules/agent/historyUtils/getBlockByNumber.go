@@ -62,7 +62,7 @@ func GetBlockByNumber(data rqst.Payload) interface{} {
 	fmt.Println("================getBlockByNumber initial parameter================")
 	fmt.Printf("blockNumber:%s, isNeedAllTx: %t", blockNumber, isNeedAllTx)
 
-	response := GetBlockByNumberIndexer(blockNumber, isNeedAllTx)
+	response := getBlockByNumberIndexer(blockNumber, isNeedAllTx)
 	var responseBlockType rsps.GetBlockResponse
 	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
 	var responseEmpty rsps.EmptyResponse
@@ -84,7 +84,7 @@ func GetBlockByNumber(data rqst.Payload) interface{} {
 	return 0
 }
 
-func GetBlockByNumberIndexer(blockNumber int64, isNeedAllTx bool) interface{} {
+func getBlockByNumberIndexer(blockNumber int64, isNeedAllTx bool) interface{} {
 	var response rsps.EmptyResponse
 	var responseBlockType rsps.GetBlockResponse
 	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse

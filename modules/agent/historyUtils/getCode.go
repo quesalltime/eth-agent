@@ -44,11 +44,11 @@ func GetCode(data rqst.Payload) interface{} {
 
 	var response rsps.GetCodeResponse
 
-	response = GetCodeIndexer(contractAddress)
+	response = getCodeIndexer(contractAddress)
 	return response
 }
 
-func GetCodeIndexer(contractAddress string) rsps.GetCodeResponse {
+func getCodeIndexer(contractAddress string) rsps.GetCodeResponse {
 	var response rsps.GetCodeResponse
 	response.Jsonrpc = "2.0"
 	response.ID = 73
