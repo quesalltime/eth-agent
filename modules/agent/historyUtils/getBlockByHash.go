@@ -5,6 +5,7 @@ import (
 	"eth-agent/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
 	model "eth-agent/modules/agent/historyUtils/model"
+	transaction "eth-agent/modules/agent/historyUtils/struct/bs_transaction"
 	"eth-agent/modules/agent/historyUtils/struct/rsps"
 	"fmt"
 
@@ -61,16 +62,16 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 	fmt.Printf("blockHash:%s, isNeedAllTx: %t\n", blockHash, isNeedAllTx)
 
 	response := getBlockByHashIndexer(blockHash, isNeedAllTx)
-	var responseBlockType rsps.GetBlockWithOnlyTxHashesResponse
-	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
+	var responseBlockType rsps.GetBlockResponse
+	var responseBlockTxHashOnlyType rsps.GetBlockWithOnlyTxHashesResponse
 	var responseEmpty rsps.EmptyResponse
 
 	switch target := response.(type) {
-	case rsps.GetBlockOnlyTxHashResponse:
-		responseBlockTxHashOnlyType = response.(rsps.GetBlockOnlyTxHashResponse)
-		return responseBlockTxHashOnlyType
 	case rsps.GetBlockWithOnlyTxHashesResponse:
-		responseBlockType = response.(rsps.GetBlockWithOnlyTxHashesResponse)
+		responseBlockTxHashOnlyType = response.(rsps.GetBlockWithOnlyTxHashesResponse)
+		return responseBlockTxHashOnlyType
+	case rsps.GetBlockResponse:
+		responseBlockType = response.(rsps.GetBlockResponse)
 		return responseBlockType
 	case rsps.EmptyResponse:
 		responseEmpty = response.(rsps.EmptyResponse)
@@ -84,8 +85,8 @@ func GetBlockByHash(data rqst.Payload) interface{} {
 
 func getBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 	var response rsps.EmptyResponse
-	var responseBlockType rsps.GetBlockWithOnlyTxHashesResponse
-	var responseBlockTxHashOnlyType rsps.GetBlockOnlyTxHashResponse
+	var responseBlockType rsps.GetBlockResponse
+	var responseBlockTxHashOnlyType rsps.GetBlockWithOnlyTxHashesResponse
 
 	condition := bson.M{
 		"hash": blockHash,
@@ -107,8 +108,27 @@ func getBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 		response.Result = ""
 		return response
 	}
-
+	// If isNeedAllTx is true, then response intact transaction format
 	if isNeedAllTx {
+		// Need iterate each transaction hash in block to get intact transaction data.
+		var transactions []transaction.Transaction
+
+		for _, txHash := range result[0].Transactions {
+			condition := bson.M{
+				"hash": txHash,
+			}
+			result, err := model.RetrieveTransactions(condition)
+			if err != nil {
+				errors := common.Error{
+					ErrorType:        1,
+					ErrorDescription: err.Error(),
+				}
+				logger.Console().Panic(errors)
+				logger.File().Error(err)
+			}
+			transactions = append(transactions, result[0])
+		}
+
 		responseBlockType.Jsonrpc = "2.0"
 		responseBlockType.ID = 73
 		responseBlockType.Result.Author = result[0].Author
@@ -131,7 +151,8 @@ func getBlockByHashIndexer(blockHash string, isNeedAllTx bool) interface{} {
 		responseBlockType.Result.Hash = result[0].Hash
 		responseBlockType.Result.TransactionsRoot = result[0].TransactionsRoot
 		responseBlockType.Result.Uncles = result[0].Uncles
-		responseBlockType.Result.Transactions = result[0].Transactions
+		// responseBlockType.Result.Transactions = result[0].Transactions
+		responseBlockType.Result.Transactions = transactions
 		responseBlockType.Result.Number = historyUtilsCommon.ParseInt64ToHex(result[0].Number)
 
 		return responseBlockType

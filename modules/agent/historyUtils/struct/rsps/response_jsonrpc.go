@@ -33,16 +33,16 @@ type GetCodeResponse struct {
 	Result  string `json:"result"`
 }
 
-type GetBlockWithOnlyTxHashesResponse struct {
-	Jsonrpc string                     `json:"jsonrpc"`
-	ID      int                        `json:"id"`
-	Result  block.BlockForOnlyTxHashes `json:"result"`
+type GetBlockResponse struct {
+	Jsonrpc string      `json:"jsonrpc"`
+	ID      int         `json:"id"`
+	Result  block.Block `json:"result"`
 }
 
-type GetBlockOnlyTxHashResponse struct {
-	Jsonrpc string                    `json:"jsonrpc"`
-	ID      int                       `json:"id"`
-	Result  block.BlockWithOnlyTxHash `json:"result"`
+type GetBlockWithOnlyTxHashesResponse struct {
+	Jsonrpc string                      `json:"jsonrpc"`
+	ID      int                         `json:"id"`
+	Result  block.BlockWithOnlyTxHashes `json:"result"`
 }
 
 type EmptyResponse struct {

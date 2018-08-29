@@ -10,6 +10,7 @@ import (
 	blockStrcut "eth-agent/modules/agent/historyUtils/struct/bs_block"
 	contractStruct "eth-agent/modules/agent/historyUtils/struct/bs_contract"
 	receiptStrcut "eth-agent/modules/agent/historyUtils/struct/bs_receipt"
+	transactionStruct "eth-agent/modules/agent/historyUtils/struct/bs_transaction"
 	"eth-agent/modules/logger"
 	"fmt"
 	"time"
@@ -20,7 +21,9 @@ var (
 )
 
 // RetrieveBlock retrieve specific block data from mongo
-func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, error) {
+// Remember we need to use the BlockWithOnlyTxHashes to mapping the block in mongodb
+// Because the transaction formant in block only contain hashes...
+func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.BlockWithOnlyTxHashesIntNum, error) {
 	var err error
 
 	mongo, err := historyUtilsMongo.GetMongoSession()
@@ -39,11 +42,38 @@ func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, erro
 	defer mongo.Close()
 
 	collection := mongo.DB(dbName).C(collectionName.BsBlocks)
-	result := []blockStrcut.Block{}
+	result := []blockStrcut.BlockWithOnlyTxHashesIntNum{}
 	err = collection.Find(conditions).All(&result)
 
 	if err != nil {
 		message := fmt.Sprintf("Retrive blocks failded, Because: %s", err)
+		err = errors.New(message)
+	}
+
+	return result, err
+}
+
+func RetrieveTransactions(conditions map[string]interface{}) ([]transactionStruct.Transaction, error) {
+	var err error
+
+	mongo, err := historyUtilsMongo.GetMongoSession()
+	if err != nil {
+		errors := common.Error{
+			ErrorType:        1,
+			ErrorDescription: err.Error(),
+		}
+		logger.Console().Panic(errors)
+		logger.File().Error(err)
+	}
+
+	defer mongo.Close()
+
+	collection := mongo.DB(dbName).C(collectionName.BsTransactions)
+	result := []transactionStruct.Transaction{}
+	err = collection.Find(conditions).All(&result)
+
+	if err != nil {
+		message := fmt.Sprintf("Retrive transaction failded")
 		err = errors.New(message)
 	}
 
