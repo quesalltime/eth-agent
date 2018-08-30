@@ -57,6 +57,8 @@ func RetrieveTransactions(conditions map[string]interface{}) ([]transactionStruc
 	var err error
 
 	mongo, err := historyUtilsMongo.GetMongoSession()
+	mongo.SetSocketTimeout(1 * time.Hour)
+
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -73,6 +75,7 @@ func RetrieveTransactions(conditions map[string]interface{}) ([]transactionStruc
 	err = collection.Find(conditions).All(&result)
 
 	if err != nil {
+		fmt.Println(err)
 		message := fmt.Sprintf("Retrive transaction failded")
 		err = errors.New(message)
 	}
@@ -85,6 +88,8 @@ func RetrieveReceipts(conditions map[string]interface{}) ([]receiptStrcut.Receip
 	var err error
 
 	mongo, err := historyUtilsMongo.GetMongoSession()
+	mongo.SetSocketTimeout(1 * time.Hour)
+
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -112,6 +117,8 @@ func RetrieveContracts(conditions map[string]interface{}) ([]contractStruct.Cont
 	var err error
 
 	mongo, err := historyUtilsMongo.GetMongoSession()
+	mongo.SetSocketTimeout(1 * time.Hour)
+
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -141,6 +148,8 @@ func RetrieveCurrentBlockNumber() (int64, error) {
 	var err error
 
 	mongo, err := historyUtilsMongo.GetMongoSession()
+	mongo.SetSocketTimeout(1 * time.Hour)
+
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
