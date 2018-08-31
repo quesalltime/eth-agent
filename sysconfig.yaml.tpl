@@ -36,8 +36,8 @@ mongo:
     port: <MONGODB_PORT>
     #root_username: <MONGO_INITDB_ROOT_USERNAME>
     #root_password: <MONGO_INITDB_ROOT_PASSWORD> 
-    bart_db: <MONGO_BART_DB>
-    bart_user: <MONGO_BART_USERNAME>
-    bart_pwd: <MONGO_BART_PASSWORD>
-    bart_readonly_user: <MONGO_BART_READONLY_USERNAME>
-    bart_readonly_pwd: <MONGO_BART_READONLY_PASSWORD>
+    agent_db: <MONGO_AGENT_DB>
+    agent_user: <MONGO_USERNAME>
+    agent_pwd: <MONGO_PASSWORD>
+    agent_readonly_user: <MONGO_AGENT_READONLY_USERNAME>
+    agent_readonly_pwd: <MONGO_AGENT_READONLY_PASSWORD>

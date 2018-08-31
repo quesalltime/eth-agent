@@ -3,9 +3,8 @@ package historyUtils
 import (
 	"errors"
 	"eth-agent/common"
-	"eth-agent/config"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
-	historyUtilsMongo "eth-agent/modules/agent/historyUtils/mongo"
+	model "eth-agent/modules/agent/historyUtils/model"
 	receiptStrcut "eth-agent/modules/agent/historyUtils/struct/bs_receipt"
 	"eth-agent/modules/agent/historyUtils/struct/rsps"
 	"eth-agent/modules/agent/struct/rqst"
@@ -16,10 +15,8 @@ import (
 )
 
 var (
-	dbName = config.SysConf.Mongo.DBName
 	// limit the number of the logs user can request.
 	numberOfLimitation = (float64)(1000)
-	BS_Receipts        = "BS_Receipts"
 )
 
 // GetLogs will check every parameters first.
@@ -190,7 +187,7 @@ func getLogsIndexer(fromBlock string, toBlock string, address string, topics []i
 	var toIndex int64
 	// Check the sequence of fromBlock and toBlock
 	if fromBlock == "latest" {
-		fromIndex, err = RetrieveCurrentBlockNumber()
+		fromIndex, err = model.RetrieveCurrentBlockNumber()
 		if err != nil {
 			errMessage := err.Error()
 			errors := common.Error{
@@ -216,7 +213,7 @@ func getLogsIndexer(fromBlock string, toBlock string, address string, topics []i
 	}
 
 	if toBlock == "latest" {
-		toIndex, err = RetrieveCurrentBlockNumber()
+		toIndex, err = model.RetrieveCurrentBlockNumber()
 		if err != nil {
 			errMessage := err.Error()
 			errors := common.Error{
@@ -274,7 +271,8 @@ func getLogsIndexer(fromBlock string, toBlock string, address string, topics []i
 
 	var result []receiptStrcut.Receipt
 
-	result, err = RetrieveAllReceipt(conditions)
+	result, err = model.RetrieveReceipts(conditions)
+
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -321,71 +319,4 @@ func getLogsIndexer(fromBlock string, toBlock string, address string, topics []i
 	response.Result = getLogsResponses
 	return response
 
-}
-
-// RetrieveAllReceipt retrieve all receipt data from mongo
-func RetrieveAllReceipt(conditions map[string]interface{}) ([]receiptStrcut.Receipt, error) {
-	var err error
-
-	mongo, err := historyUtilsMongo.GetMongoSession()
-	if err != nil {
-		errors := common.Error{
-			ErrorType:        1,
-			ErrorDescription: err.Error(),
-		}
-		logger.Console().Panic(errors)
-		logger.File().Error(err)
-	}
-
-	defer mongo.Close()
-
-	collection := mongo.DB(dbName).C(BS_Receipts)
-	result := []receiptStrcut.Receipt{}
-	err = collection.Find(conditions).All(&result)
-
-	if err != nil {
-		message := fmt.Sprintf("Retrive receipts failded")
-		err = errors.New(message)
-	}
-
-	return result, err
-}
-
-// RetrieveCurrentBlockNumber retrieve the highest blockNumber
-func RetrieveCurrentBlockNumber() (int64, error) {
-	var blockNumber int64
-	var err error
-
-	mongo, err := historyUtilsMongo.GetMongoSession()
-	if err != nil {
-		errors := common.Error{
-			ErrorType:        1,
-			ErrorDescription: err.Error(),
-		}
-		logger.Console().Panic(errors)
-		logger.File().Error(err)
-	}
-
-	defer mongo.Close()
-
-	collection := mongo.DB(dbName).C(BS_Receipts)
-	var receipt []receiptStrcut.Receipt
-	var maxBlockNumber = "-blockNumber"
-
-	err = collection.Find(nil).Sort(maxBlockNumber).Limit(1).All(&receipt)
-
-	if err != nil {
-		errors := common.Error{
-			ErrorType:        1,
-			ErrorDescription: err.Error(),
-		}
-		logger.Console().Panic(errors)
-		logger.File().Error(err)
-	}
-
-	for _, data := range receipt {
-		blockNumber = data.BlockNumber
-	}
-
-	return blockNumber, err
 }

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/DeanThompson/ginpprof"
 	nice "github.com/ekyoung/gin-nice-recovery"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -33,6 +34,8 @@ func main() {
 	// router.Use(middleware.VerifyToken())
 
 	router.POST("/agent", agent.Redirect)
+
+	ginpprof.Wrap(router)
 
 	router.Run(":" + config.SysConf.EthProxy.Port)
 }

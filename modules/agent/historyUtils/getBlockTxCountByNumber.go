@@ -4,8 +4,8 @@ import (
 	"errors"
 	"eth-agent/common"
 	historyUtilsCommon "eth-agent/modules/agent/historyUtils/common"
-	historyUtilsMongo "eth-agent/modules/agent/historyUtils/mongo"
-	blockStrcut "eth-agent/modules/agent/historyUtils/struct/bs_block"
+	model "eth-agent/modules/agent/historyUtils/model"
+
 	"eth-agent/modules/agent/historyUtils/struct/rsps"
 	"fmt"
 
@@ -15,11 +15,8 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-var (
-	BS_Blocks = "BS_Blocks"
-)
-
-func GetBlockTransactionCountByNumber(data rqst.Payload) interface{} {
+// GetBlockTxCountByNumber handles counting the total amount of transaction in a block by giving it's block height.
+func GetBlockTxCountByNumber(data rqst.Payload) interface{} {
 	var err error
 	var message string
 
@@ -58,11 +55,11 @@ func GetBlockTransactionCountByNumber(data rqst.Payload) interface{} {
 
 	var response rsps.GBTCResponse
 
-	response = getBlockTransactionCountByNumberIndexer(blockNumberInteger)
+	response = getBlockTxCountByNumber(blockNumberInteger)
 	return response
 }
 
-func getBlockTransactionCountByNumberIndexer(blockNumber int64) rsps.GBTCResponse {
+func getBlockTxCountByNumber(blockNumber int64) rsps.GBTCResponse {
 	var response rsps.GBTCResponse
 	response.Jsonrpc = "2.0"
 	response.ID = 73
@@ -71,7 +68,7 @@ func getBlockTransactionCountByNumberIndexer(blockNumber int64) rsps.GBTCRespons
 		"number": blockNumber,
 	}
 
-	result, err := RetrieveBlock(condition)
+	result, err := model.RetrieveBlock(condition)
 	if err != nil {
 		errors := common.Error{
 			ErrorType:        1,
@@ -89,32 +86,4 @@ func getBlockTransactionCountByNumberIndexer(blockNumber int64) rsps.GBTCRespons
 		response.Result = historyUtilsCommon.ParseInt64ToHex(lengthOfTx)
 	}
 	return response
-}
-
-// RetrieveBlock retrieve specific block data from mongo
-func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.Block, error) {
-	var err error
-
-	mongo, err := historyUtilsMongo.GetMongoSession()
-	if err != nil {
-		errors := common.Error{
-			ErrorType:        1,
-			ErrorDescription: err.Error(),
-		}
-		logger.Console().Panic(errors)
-		logger.File().Error(err)
-	}
-
-	defer mongo.Close()
-
-	collection := mongo.DB(dbName).C(BS_Blocks)
-	result := []blockStrcut.Block{}
-	err = collection.Find(conditions).All(&result)
-
-	if err != nil {
-		message := fmt.Sprintf("Retrive block failded")
-		err = errors.New(message)
-	}
-
-	return result, err
 }

@@ -17,17 +17,17 @@ func requestDB(data rqst.Payload) interface{} {
 	case "eth_getLogs":
 		response = historyUtils.GetLogs(data)
 	case "eth_getBlockTransactionCountByNumber":
-		response = historyUtils.GetBlockTransactionCountByNumber(data)
+		response = historyUtils.GetBlockTxCountByNumber(data)
 	case "eth_getBlockTransactionCountByHash":
-		response = notImplemented()
+		response = historyUtils.GetBlockTxCountByHash(data)
 	case "eth_getTransactionReceipt":
-		response = notImplemented()
+		response = historyUtils.GetTxReceipt(data)
 	case "eth_getCode":
-		response = notImplemented()
+		response = historyUtils.GetCode(data)
 	case "eth_getBlockByHash":
-		response = notImplemented()
+		response = historyUtils.GetBlockByHash(data)
 	case "eth_getBlockByNumber":
-		response = notImplemented()
+		response = historyUtils.GetBlockByNumber(data)
 	default:
 		response = "no corresponding method"
 		logger.Console().Debug(fmt.Sprintf("%s", response))
