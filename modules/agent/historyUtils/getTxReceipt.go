@@ -14,6 +14,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// GetTxReceipt get the receipt from a transaction by giving the hash value of receipt.
 func GetTxReceipt(data rqst.Payload) interface{} {
 	var err error
 	var message string

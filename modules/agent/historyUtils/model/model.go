@@ -53,6 +53,7 @@ func RetrieveBlock(conditions map[string]interface{}) ([]blockStrcut.BlockWithOn
 	return result, err
 }
 
+// RetrieveTransactions retrieve the information of a transaction
 func RetrieveTransactions(conditions map[string]interface{}) ([]transactionStruct.Transaction, error) {
 	var err error
 
@@ -113,6 +114,7 @@ func RetrieveReceipts(conditions map[string]interface{}) ([]receiptStrcut.Receip
 	return result, err
 }
 
+// RetrieveContracts retrieve the information of a contract
 func RetrieveContracts(conditions map[string]interface{}) ([]contractStruct.Contract, error) {
 	var err error
 

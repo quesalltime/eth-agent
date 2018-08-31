@@ -15,6 +15,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// GetBlockByHash return the block information by giving it's hash.
 func GetBlockByHash(data rqst.Payload) interface{} {
 	var err error
 	var message string

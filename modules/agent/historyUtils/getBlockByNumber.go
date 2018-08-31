@@ -15,6 +15,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// GetBlockByNumber return the block information by giving it's block height.
 func GetBlockByNumber(data rqst.Payload) interface{} {
 	var err error
 	var message string

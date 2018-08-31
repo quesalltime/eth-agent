@@ -15,6 +15,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// GetBlockTxCountByHash handles counting the total amount of transaction in a block by giving it's hash.
 func GetBlockTxCountByHash(data rqst.Payload) interface{} {
 	var err error
 	var message string

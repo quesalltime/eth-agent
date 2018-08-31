@@ -14,6 +14,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// GetCode will return the code of contrac by giving two parameters:(transactino hash, block height)
 func GetCode(data rqst.Payload) interface{} {
 	var err error
 	var message string
